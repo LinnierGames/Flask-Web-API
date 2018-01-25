@@ -1,7 +1,7 @@
 import os
 import json
 from flask import Flask, request
-from app.libraries import Listogram, Stochastic, Markov
+from app.libraries import Listogram, Stochastic, Markov, RandomWords
 
 # Initialize application
 app = Flask(__name__, static_folder=None)
@@ -10,6 +10,16 @@ app = Flask(__name__, static_folder=None)
 @app.route("/")
 def hello():
     return "Hello World!"
+
+
+# /generate-sentence?words=5
+@app.route("/generate-sentence")
+def generate_sentence():
+    num_words = int(request.args.get('words'))
+
+    rnd_wrds = RandomWords(num_words)
+
+    return str(rnd_wrds)
 
 
 @app.route("/markov-sentense")
