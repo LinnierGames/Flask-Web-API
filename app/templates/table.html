@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h3 style="margin-bottom: 0;">Table for {{ title }}</h3>
+    <br>
+    <span><a href="javascript:location.reload(true)">Again</a></span>
+    <p>Result: {{ data[0] }}</p>
+    <ul>
+        {% for record in data %}
+            <li>{{ record }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

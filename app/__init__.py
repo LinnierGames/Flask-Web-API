@@ -1,34 +1,44 @@
 import json
 from flask import Flask, render_template, request
 from app.libraries import Listogram, Stochastic, Markov, RandomWords
+import random
 
 # Initialize application
 app = Flask(__name__, static_folder=None)
 
 
 @app.route("/")
-def hello():
-    num_words = int(request.args.get('words'))
-    rnd_wrds = RandomWords(num_words)
-
-    return render_template("index.html", sentence=str(rnd_wrds))
+def index():
+    return render_template("index.html")
 
 
-# /generate-sentence?words=5
-@app.route("/generate-sentence")
+list_random = []
+
+
+@app.route("/random-sentence")
 def generate_sentence():
-    num_words = int(request.args.get('words'))
-
+    num_words = int(random.randint(0, 50))
     rnd_wrds = RandomWords(num_words)
+    list_random.insert(0, rnd_wrds)
 
-    return str(rnd_wrds)
+    return render_template("table.html", title="Random Sentences", data=list_random)
 
 
-@app.route("/markov-sentense")
-def listogram():
-    m = Markov("one fish two fish red fish blue fish".split())
+list_markov = []
 
-    return m.generate_a_sentence()
+
+@app.route("/markov-chain")
+def markov():
+    corpus = request.args.get("corpus")
+    m = None
+    if corpus is not None:
+        m = Markov(corpus.split())
+    else:
+        m = Markov("one fish two fish red fish blue fish".split())
+    sentence = m.generate_a_sentence()
+    list_markov.insert(0, sentence)
+
+    return render_template("table.html", title="Markov Chain", data=list_markov)
 
 
 @app.route("/person")
