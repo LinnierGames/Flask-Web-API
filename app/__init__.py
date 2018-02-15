@@ -1,6 +1,6 @@
-import json
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from app.libraries import Listogram, Stochastic, Markov, RandomWords
+import twitter
 import random
 
 # Initialize application
@@ -41,8 +41,17 @@ def markov():
     return render_template("table.html", title="Markov Chain", data=list_markov)
 
 
-@app.route("/person")
-def person_route():
-    person = {"name": "Eliel", 'age': 23}
-    json_person = json.dumps(person)
-    return (json_person, 200, None)
+@app.route('/tweet', methods=['POST'])
+def tweet():
+    status = request.form['quote']
+
+    print(twitter.tweet(status))
+
+    return redirect('/')
+
+
+# @app.route("/person")
+# def person_route():
+#     person = {"name": "Eliel", 'age': 23}
+#     json_person = json.dumps(person)
+#     return (json_person, 200, None)

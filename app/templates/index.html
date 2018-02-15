@@ -3,4 +3,9 @@
 {% block content %}
     <h2 class="jumbotron" style="text-align: center; margin-top: 124px">Welcome!</h2>
     <span><a href="/random-sentence">Random Sentence</a> <a href="/markov-chain">Markov Chain</a></span>
+
+    <form action="/tweet" method="post">
+      <input type="hidden" name="quote">
+      <button type="submit">Tweet this</button>
+    </form>
 {% endblock %}
