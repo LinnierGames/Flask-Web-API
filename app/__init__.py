@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from app.libraries import Listogram, Stochastic, Markov, RandomWords
+from app.libraries import Listogram, Stochastic, Markov, RandomWords, OrderedMarkovChain
 import twitter
 import random
 
@@ -10,6 +10,16 @@ app = Flask(__name__, static_folder=None)
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/<int:order>")
+def set_markov_order(order):
+    with app.open_resource('book.txt') as f:
+        corpus = f.read()
+
+    nth_markov = OrderedMarkovChain(corpus, order)
+
+    return redirect('/')
 
 
 list_random = []
@@ -25,6 +35,12 @@ def generate_sentence():
 
 
 list_markov = []
+
+
+corpus = "one fish two fish red fish blue fish"
+
+
+nth_markov = OrderedMarkovChain(corpus, 1)
 
 
 @app.route("/markov-chain")
@@ -43,9 +59,9 @@ def markov():
 
 @app.route('/tweet', methods=['POST'])
 def tweet():
-    status = request.form['quote']
+    status = nth_markov.generate_a_sentence()
 
-    print(twitter.tweet(status))
+    print(twitter.tweet(status).text)
 
     return redirect('/')
 
